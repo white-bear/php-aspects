@@ -8,10 +8,10 @@ php-aspects
 -----------
 
 Реализованы следующие виды декораторов:
-- декоратор вызывается перед исполнением функции
-- декоратор вызывается после исполнения функции
-- декоратор вызывается в случае выброса определенного исключения
-- декоратор вызывается перед исполнением функции, функция вызывается из декоратора, и после ее исполнения управление снова передается декоратору
+- @Before: декоратор вызывается перед исполнением функции
+- @After: декоратор вызывается после исполнения функции
+- @Throw: декоратор вызывается в случае выброса определенного исключения
+- @Around: декоратор вызывается перед исполнением функции, функция вызывается из декоратора, и после ее исполнения управление снова передается декоратору
 
 
 Использование
@@ -81,7 +81,9 @@ php-aspects
 В тестовом окружении применяется динамическое переопределение методов класса, для этого к автозагрузчику классов привязывается выполнение инъекции функций-советов:
 
 
-        $loader->bindAfterLoad(function ($classname) { Cms\Aop\Aspect\AspectInjection::dynamicBindAspect($classname); });
+        $loader->bindAfterLoad(function ($classname) {
+            Cms\Aop\Aspect\AspectInjection::dynamicBindAspect($classname);
+        });
 
 
 В продакшн окружении используется генератор аспектов, который соответствующим образом меняет исходный код файлов перед выкладыванием их на площадку.
@@ -97,4 +99,4 @@ php-aspects
 Требуется наложить патч на `runkit` перед его сборкой.
 Патч добавляет копирование PHPDOC для методов класса в функции runkit_method_copy
 
-    `sed -i "s~^.*func.common.function_name = estrndup(methodname, methodname_len);.*$~func.common.function_name = estrndup(methodname, methodname_len);\n\n#ifdef ZEND_ENGINE_2\nif (add_or_update == HASH_UPDATE) {\nfunc.op_array.doc_comment = estrndup(orig_fe->op_array.doc_comment, orig_fe->op_array.doc_comment_len);\nfunc.op_array.doc_comment_len = orig_fe->op_array.doc_comment_len;\n}\n#endif\n~" runkit_methods.c`
+    sed -i "s~^.*func.common.function_name = estrndup(methodname, methodname_len);.*$~func.common.function_name = estrndup(methodname, methodname_len);\n\n#ifdef ZEND_ENGINE_2\nif (add_or_update == HASH_UPDATE) {\nfunc.op_array.doc_comment = estrndup(orig_fe->op_array.doc_comment, orig_fe->op_array.doc_comment_len);\nfunc.op_array.doc_comment_len = orig_fe->op_array.doc_comment_len;\n}\n#endif\n~" runkit_methods.c
