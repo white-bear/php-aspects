@@ -27,12 +27,7 @@ class AroundAdvice extends BaseAdvice
 	static public function getDecorators()
 	{
 		return array_merge(
-			[
-				'\Cms\Aop\Advice\Decorator\Cached\LazyCachedDecorator',
-				'\Cms\Aop\Advice\Decorator\Cached\MethodResultCachedDecorator',
-				'\Cms\Aop\Advice\Decorator\Cached\RuntimeCachedAdviceDecorator',
-				'\Cms\Aop\Advice\Decorator\Profiled\ProfiledDecorator',
-			],
+			['\Cms\Aop\Advice\Decorator\Cached\RuntimeCachedAdviceDecorator'],
 			parent::getDecorators()
 		);
 	}
